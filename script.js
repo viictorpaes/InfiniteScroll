@@ -1,7 +1,40 @@
+const imageContainer = document.getElementById('image-container');
+const loader = document.getElementById('loader');
+
+let photosArray = [];
+
+// Helper Function to Set Attributes on DOM Elements
+function setAttributes(element, attributes){
+    for (const key in attributes) {
+        element.setAttribute(key, attributes[key]);
+    }
+}
+
+// Create Elements For Links and Photos, Add to DOM
+function displayPhotos() {
+    photosArray.forEach((photo) => {
+    // Create <a> to link to Unsplash
+    const item = document.createElement('a');
+    setAttributes(item, {
+        href: photo.links.html,
+        target: '_blank',
+    });
+    // Create <img> for photo
+    const img = document.createElement('img');
+    setAttributes(img, {
+        src: photo.urls.regular,
+        alt: photo.alt_descripion,
+        title: photo.alt_descripion,
+    });
+    // Put <img> inside <a>, then put both inside imageContainer Element
+    item.appendChild(img);
+    imageContainer.appendChild(item);
+    });
+}
 
 // unsplash API
 const count = 10;
-const apiKey = 'JCrOvcH0Pc8R9e2ktCSwWJanAr_KaX_6dTOC3t6OWlU';
+// const apiKey = 'uKMSKcyXd9jQ2RA1Il37CAD4JqijS58GYPoP9hdoVSM';
 const apiUrl = `https://api.unsplash.com/photos/random?client_id=${apiKey}&count=${count}`;
 
 // Get fotos from Unsplash API
@@ -9,8 +42,8 @@ const apiUrl = `https://api.unsplash.com/photos/random?client_id=${apiKey}&count
 async function getPhotos() {
     try {
         const response = await fetch(apiUrl);
-        const data = await response.json();
-        console.log(data);
+        photosArray = await response.json();
+        displayPhotos();
     } catch (error) {
         // Catch Error Here
     }
